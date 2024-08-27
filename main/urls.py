@@ -20,6 +20,7 @@ from django.urls import path, include
 from sites.urls import urlpatterns as sites_urls
 
 urlpatterns = [
-    path('', include('sites.urls')),
+    # TODO: provide access to an admin page
     path('admin/', admin.site.urls),
+    path('', include('sites.urls')),
 ]
