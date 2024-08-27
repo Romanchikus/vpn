@@ -8,6 +8,9 @@ class Site(models.Model):
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def get_app_link_to_site(self, absolute_uri):
+        return f"{absolute_uri}{self.name}/"
+
 
 class Activity(models.Model):
 

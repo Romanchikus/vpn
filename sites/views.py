@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 from django.http import Http404, HttpResponse
 
@@ -22,7 +22,9 @@ def get_base_site_url(request, name):
         return HttpResponse(loader.load(s.url))
 
 
-def get_site_route(request, site: Site, orig_url: str) -> Union[None, str, bool]:
+def get_site_route(
+    request, site: Site, orig_url: Optional[str]
+) -> Union[None, str, bool]:
     if not orig_url:
         return None
     splitted: list[str] = orig_url.split(site.url)
@@ -38,11 +40,14 @@ def get_site_url(request, name):
         site = Site.objects.get(name=name)
     except Site.DoesNotExist:
         raise Http404("Site does not exist")
+
     endpoint = get_site_route(request, site, orig_url)
     if endpoint is False:
         redirect(orig_url)
-    with Loader() as loader:
-        data = loader.load(site.url)
+
+    absolute_url = site.get_app_link_to_site(request.build_absolute_uri("/"))
+    with Loader(absolute_url=absolute_url) as loader:
+        data = loader.load(orig_url)
         Activity.objects.create(
             site=site,
             user=request.user,
