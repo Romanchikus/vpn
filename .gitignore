@@ -1,2 +1,8 @@
 /.venv
 /chrome-linux64
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.vscode
