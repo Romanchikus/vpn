@@ -13,45 +13,40 @@ def test(request):
         return HttpResponse(loader.load(url))
 
 
-def get_base_site_url(request, name):
-    try:
-        s = Site.objects.get(name=name)
-    except Site.DoesNotExist:
-        raise Http404("Site does not exist")
-    with Loader() as loader:
-        return HttpResponse(loader.load(s.url))
-
-
-def get_site_route(
-    request, site: Site, orig_url: Optional[str]
-) -> Union[None, str, bool]:
-    if not orig_url:
-        return None
-    splitted: list[str] = orig_url.split(site.url)
-    if len(splitted) >= 2:
-        return splitted[1]
+def get_site_route(site_name: str, path: str) -> Union[list[str], bool]:
+    splitted: list[str] = path.split(f"/{site_name}/")
+    if len(splitted) >= 2 and splitted[1]:
+        return splitted[1:]
     else:
-        return False
+        return path
 
 
-def get_site_url(request, name):
-    orig_url: str = request.GET.get("orig_url")
+def process_getting_site(request, name, endpoint=[""]):
+
     try:
         site = Site.objects.get(name=name)
     except Site.DoesNotExist:
         raise Http404("Site does not exist")
 
-    endpoint = get_site_route(request, site, orig_url)
-    if endpoint is False:
-        redirect(orig_url)
-
     absolute_url = site.get_app_link_to_site(request.build_absolute_uri("/"))
-    with Loader(absolute_url=absolute_url) as loader:
-        data = loader.load(orig_url)
+    print(dict(absolute_url=absolute_url, site_url=site.url))
+    with Loader(absolute_url=absolute_url, site_url=site.url) as loader:
+        data = loader.load(endpoint)
         Activity.objects.create(
             site=site,
             user=request.user,
-            content_size=0,
+            content_size=loader.total_MB,
             route=endpoint,
         )
+        if not data:
+            raise ValueError(f"Something went wrong {absolute_url=}{site.url=}")
         return HttpResponse(data)
+
+
+def get_site_url(request, name: str):
+    return process_getting_site(request, name, endpoint="")
+
+
+def get_site_route_url(request, name: str):
+    endpoint = get_site_route(site_name=name, path=request.path)
+    return process_getting_site(request, name, endpoint=endpoint)
