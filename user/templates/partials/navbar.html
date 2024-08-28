@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'user:index' %}">VPN Service</a>
+
+    <div id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">Activity</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn" onclick="proceed();" >Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'user:login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'user:register' %}">Register</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>

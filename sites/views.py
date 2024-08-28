@@ -1,27 +1,35 @@
-from typing import Optional, Union
+from typing import Union
 
 from django.http import Http404, HttpResponse
 
 from sites.loader import Loader
 from sites.models import Site, Activity
-from django.shortcuts import redirect
+from logger import logger
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import ListView
 
 
-def test(request):
-    url = "https://zaxid.net/koli_varto_peresadzhuvati_fikus_i_yak_tse_pravilno_robiti_poradi_n1586438"
-    with Loader() as loader:
-        return HttpResponse(loader.load(url))
+class SiteList(LoginRequiredMixin, ListView):
+    template_name = "sites.html"
+    model = Site
+    context_object_name = "activities"
+
+    def get_queryset(self):
+        return Site.objects.filter(user=self.request.user)
 
 
-def get_site_route(site_name: str, path: str) -> Union[list[str], bool]:
+@login_required
+def get_site_route(site_name: str, path: str) -> str:
     splitted: list[str] = path.split(f"/{site_name}/")
     if len(splitted) >= 2 and splitted[1]:
-        return splitted[1:]
+        return splitted[1]
     else:
         return path
 
 
-def process_getting_site(request, name, endpoint=[""]):
+@login_required
+def process_getting_site(request, name, endpoint=""):
 
     try:
         site = Site.objects.get(name=name)
@@ -29,7 +37,7 @@ def process_getting_site(request, name, endpoint=[""]):
         raise Http404("Site does not exist")
 
     absolute_url = site.get_app_link_to_site(request.build_absolute_uri("/"))
-    print(dict(absolute_url=absolute_url, site_url=site.url))
+    logger.info(dict(absolute_url=absolute_url, site_url=site.url))
     with Loader(absolute_url=absolute_url, site_url=site.url) as loader:
         data = loader.load(endpoint)
         Activity.objects.create(
@@ -43,10 +51,12 @@ def process_getting_site(request, name, endpoint=[""]):
         return HttpResponse(data)
 
 
+@login_required
 def get_site_url(request, name: str):
     return process_getting_site(request, name, endpoint="")
 
 
+@login_required
 def get_site_route_url(request, name: str):
     endpoint = get_site_route(site_name=name, path=request.path)
-    return process_getting_site(request, name, endpoint=endpoint)
+    return process_getting_site(request, name, endpoint="".join(endpoint))

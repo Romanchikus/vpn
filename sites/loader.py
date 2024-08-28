@@ -14,9 +14,9 @@ class Loader:
         self.total_MB: float = 0
         self.page_source = None
 
-    def load(self, endpoint: list[str]):
+    def load(self, endpoint: str):
         try:
-            url = self.site_url + "/" + "".join(endpoint)
+            url = self.site_url + "/" + endpoint
             self.driver.get(url)
             self.change_internal_links()
         except Exception as ex:

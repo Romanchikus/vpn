@@ -1,0 +1,12 @@
+#logout-form {
+  display: inline;
+  display: list-item;
+}
+#logout-form button {
+  background: none;
+  border: none !important;
+  border-width: 0 !important;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}

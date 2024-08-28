@@ -40,8 +40,13 @@ INSTALLED_APPS = [
     'user',
     'sites',
     'django_extensions',
-    
+    'widget_tweaks',
 ]
+
+LOGOUT_URL = '/user/logout/'
+LOGOUT_REDIRECT_URL = '/user/index/'
+LOGIN_URL = '/user/login/'
+LOGIN_REDIRECT_URL = '/user/index/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -121,6 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'staticfiles']
+STATIC_ROOT = 'static_root/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

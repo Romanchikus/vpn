@@ -8,6 +8,8 @@ django = "*"
 selenium = "*"
 django-extensions = "*"
 beautifulsoup4 = "*"
+django-widget-tweaks = "*"
+lxml = "*"
 
 [dev-packages]
 
