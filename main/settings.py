@@ -41,17 +41,19 @@ INSTALLED_APPS = [
     'sites',
     'django_extensions',
     'widget_tweaks',
+    'django_htmx',
 ]
 
 LOGOUT_URL = '/user/logout/'
-LOGOUT_REDIRECT_URL = '/user/index/'
+LOGOUT_REDIRECT_URL = '/user/'
 LOGIN_URL = '/user/login/'
-LOGIN_REDIRECT_URL = '/user/index/'
+LOGIN_REDIRECT_URL = '/user/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    "django_htmx.middleware.HtmxMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

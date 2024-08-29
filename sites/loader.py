@@ -9,10 +9,13 @@ from logger import logger
 class Loader:
     def __init__(self, absolute_url: str, site_url: str, *args, **kwargs):
         self.driver = webdriver.Chrome
-        self.absolute_url = absolute_url[:-1] if absolute_url[-1] == "/" else absolute_url
+        self.absolute_url = (
+            absolute_url[:-1] if absolute_url[-1] == "/" else absolute_url
+        )
         self.site_url = site_url[:-1] if site_url[-1] == "/" else site_url
         self.total_MB: float = 0
         self.page_source = None
+        logger.info(f"Init with: {self.absolute_url=}, {self.site_url=}")
 
     def load(self, endpoint: str):
         try:
@@ -37,21 +40,25 @@ class Loader:
         soup = BeautifulSoup(self.driver.page_source, features="lxml")
         for a in soup.findAll("a"):
             route = None
-            splitted_link = (
-                a.get("href").split(self.site_url) if a.get("href") else None
-            )
-            if self.site_url == a.get("href"):
-                a["href"] = self.absolute_url
-                continue
+            if a.get("href"):
+                if a.get("href")[0] == "/":
+                    a["href"] = self.absolute_url + a.get("href")
+                    continue
+                splitted_link = a.get("href").split(self.site_url)
 
-            if splitted_link and len(splitted_link) >= 2:
-                if not splitted_link[1]:
-                    route = ""
-                else:
-                    route = splitted_link[1]
+                if self.site_url == a.get("href"):
+                    a["href"] = self.absolute_url
+                    continue
+                # print(a.get("href"), splitted_link)
 
-            if route:
-                a["href"] = f"{self.absolute_url}{route}"
+                if splitted_link and len(splitted_link) >= 2:
+                    if not splitted_link[1]:
+                        route = ""
+                    else:
+                        route = splitted_link[1]
+
+                if route:
+                    a["href"] = f"{self.absolute_url}{route}"
         self.page_source = str(soup)
 
     def __enter__(self):

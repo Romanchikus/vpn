@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 
-from sites.views import get_site_url, get_site_route_url
+from sites.views.sites import get_site_url, get_site_route_url
 
 
 urlpatterns = [

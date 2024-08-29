@@ -5,7 +5,10 @@
         <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link" href="#">Activity</a>
+                <a class="nav-link" href="{% url 'user:activity' %}">Activity</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'user:site-list' %}">My sites</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link btn" onclick="proceed();" >Logout</a>

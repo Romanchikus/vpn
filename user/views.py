@@ -21,16 +21,8 @@ class Login(LoginView):
 class RegisterView(FormView):
     form_class = RegisterForm
     template_name = "registration/register.html"
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("user:login")
 
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-
-
-def check_username(request):
-    username = request.POST.get("username")
-    if get_user_model().objects.filter(username=username).exists():
-        return HttpResponse("This username already exists")
-    else:
-        return HttpResponse("")

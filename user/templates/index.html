@@ -4,6 +4,35 @@
 
 <p>Welcome!</p>
 
-{% lorem 2 p %}
+
+<table class="table">
+    <tbody>
+        {% if user.is_authenticated %}
+        <tr>
+            <th scope="row">
+                <a class="text-success nav-link" href="{% url 'user:activity' %}">Activity</a>
+            </th>
+        </tr>
+        <tr>
+            <th scope="row">
+                <a class="text-success nav-link" href="{% url 'user:site-list' %}">My sites</a>
+            </th>
+        </tr>
+        <tr>
+            <th scope="row">
+                <a class="text-success nav-link" onclick="proceed()">Logout</a>
+            </th>
+        </tr>
+        {% else %}
+        <tr>
+            <th scope="row"><a class="nav-link" href="{% url 'user:login' %}">Login</a></th>
+        </tr>
+        <tr>
+            <th scope="row"><a class="nav-link" href="{% url 'user:register' %}">Register</a></th>
+        </tr>
+
+        {% endif %}
+    </tbody>
+</table>
 
 {% endblock content %}

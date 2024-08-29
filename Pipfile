@@ -10,6 +10,7 @@ django-extensions = "*"
 beautifulsoup4 = "*"
 django-widget-tweaks = "*"
 lxml = "*"
+django-htmx = "*"
 
 [dev-packages]
 

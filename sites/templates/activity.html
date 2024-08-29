@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="align-center col-10 offset-1">
+
+    <main class="d-flex">
+        <section id="activity-list" class="col-12">
+            <div class="row">
+                <p class="col-6 col-md-4 lead ml-2 mb-0">My activities</p>
+
+            </div>
+            <div class="d-flex">
+
+                {% if not activities %}
+                <p>You do not have any activities cross activitys</p>
+                {% else %}
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Usage</th>
+                            <th scope="col">Routes</th>
+                            <th scope="col">Content size (MB)</th>
+                            <th scope="col">More</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in activities %}
+                        <tr>
+                            <th scope="row">{{ activity.site__name }}</th>
+                            <td>{{ activity.usage }}</td>
+                            <td>{{ activity.routes_count }}</td>
+                            <td>{{ activity.content_size|floatformat:2 }}</td>
+                            <td><a class="btn btn-success nav-link"
+                                    href="{% url 'user:activity-site' activity.site__pk %}">Details</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <section class="col-6">
+
+                    {% endif %}
+
+                </section>
+                <div class="d-flex">
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+</div>
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="align-center offset-2">
+    <p class="lead mb-3 ml-0">Add Site</p>
+    <hr />
+    <form method="POST" action="{% url 'user:add-site' %}" autocomplete='off'>
+        {% csrf_token %}
+
+        <div class="form-group mb-4">
+            <label>{{ form.url.label_tag }}</label>
+            {{ form.url.errors }}
+            {% render_field form.url class="form-control" %}
+            <div class="text-danger mt-2" id="username-err"></div>
+        </div>
+        <div>
+
+            <label>{{ form.name.label_tag }}</label>
+            {{ form.name.errors }}
+            {% render_field form.name class="form-control" %}
+        </div>
+
+        <button type="submit" class="btn btn-success mt-2">Add site</button>
+    </form>
+</div>
+{% endblock content %}

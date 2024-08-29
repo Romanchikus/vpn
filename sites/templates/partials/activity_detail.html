@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="align-center col-10 offset-1">
+
+    <main class="d-flex">
+        <section id="activity-list" class="col-12">
+            <div class="row">
+                <p class="col-6 col-md-4 lead ml-2 mb-0"><H1 class="bg-light h1 text-capitalize">{{ site_name}} activities</H1></p>
+
+            </div>
+            <div class="d-flex">
+
+                {% if not activities %}
+                    <p class="bg-info">You do not have any activities for {{ site_name}}</p>
+                {% else %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Route</th>
+                            <th scope="col">Used</th>
+                            <th scope="col">Content size (MB)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in activities %}
+                                <tr>
+                                    <th scope="row">{{ activity.route }}</th>
+                                    <td>{{ activity.used }}</td>
+                                    <td>{{ activity.content_size|floatformat:2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                <section class="col-6">
+
+                    {% endif %}
+
+                </section>
+                <div class="d-flex">
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+</div>
+{% endblock content %}
