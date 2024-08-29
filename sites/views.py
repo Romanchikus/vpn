@@ -1,6 +1,7 @@
 from typing import Union
 
 from django.http import Http404, HttpResponse
+from django.shortcuts import render
 
 from sites.loader import Loader
 from sites.models import Site, Activity
@@ -13,10 +14,27 @@ from django.views.generic.list import ListView
 class SiteList(LoginRequiredMixin, ListView):
     template_name = "sites.html"
     model = Site
-    context_object_name = "activities"
+    context_object_name = "sites"
 
     def get_queryset(self):
-        return Site.objects.filter(user=self.request.user)
+        return Site.objects.filter(creator=self.request.user)
+
+
+@login_required
+def add_site(request):
+    name = request.POST.get("sitename")
+    url = request.POST.get("url")
+    name = request.POST.get("sitename")
+
+    # add the site to the user's list
+    if not Site.objects.filter(url=url, name=name, creator=request.user).exists():
+        Site.objects.get_or_create(
+            url=url, name="zaxid", defaults={"creator": request.user}
+        )
+
+    # return template fragment with all the user's sites
+    sites = Site.objects.filter(creator=request.user)
+    return render(request, "partials/site-list.html", {"sites": sites})
 
 
 @login_required

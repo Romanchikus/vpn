@@ -1,0 +1,41 @@
+<div class="d-flex justify-content-between align-items-center">
+    <p class="lead ml-0">My sites</p>
+    <form hx-post="{% url 'user:add-site' %}" hx-target='#site-list' class="d-flex align-items-center">
+        {% csrf_token %}
+        <input type="text" id="sitename-input" name="sitename" class="form-control-sm mr-2"
+            placeholder="Enter a site" />
+        <button type="submit" class="btn btn-success btn-sm">Add site</button>
+    </form>
+</div>
+<hr />
+
+<div class="d-flex justify-content-between">
+
+    <section class="col-6">
+
+        {% if not sites %}
+            <p>You do not have any sites in your list</p>
+        {% else %}
+        {% for site in sites %}
+        <div>
+
+            <input type="hidden" name="site_order" value="{{ site.pk }}" />
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a hx-target="#site-list" hx-push-url="/sites/{{ site.site.name }}" href="{{ site.url }}">
+                    {{site.name}}
+                </a>
+                <span class="badge badge-danger badge-pill" style="cursor: pointer;" hx-target="#site-list"
+                    hx-confirm="Are you sure you wish to delete?">X</span>
+            </li>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% if request.method == 'POST' %}
+<input type="text" hx-swap-oob="true" id="sitename-input" name="sitename" class="form-control-sm mr-2"
+    placeholder="Enter a site" />
+{% endif %}
