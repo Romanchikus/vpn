@@ -62,11 +62,13 @@ class Loader:
         self.page_source = str(soup)
 
     def __enter__(self):
-        service = Service()
         options = webdriver.ChromeOptions()
         options.set_capability("goog:loggingPrefs", {"performance": "INFO"})
-        self.driver = self.driver(service=service, options=options)
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument('--headless')
+        self.driver = webdriver.Remote("http://chrome:4444/wd/hub", options=options)
         return self
 
     def __exit__(self, type, value, traceback):
-        self.driver.close()
+        self.driver.quit()

@@ -11,6 +11,7 @@ beautifulsoup4 = "*"
 django-widget-tweaks = "*"
 lxml = "*"
 django-htmx = "*"
+gunicorn = "*"
 
 [dev-packages]
 

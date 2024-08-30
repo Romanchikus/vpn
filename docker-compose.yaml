@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/src
+  selenium:
+    image: selenium/standalone-chrome:latest
+    ports:
+    - 4444:4444
+    hostname: chrome
+    environment:
+      START_XVFB: "false"
+      SE_NODE_MAX_SESSIONS: 4
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
